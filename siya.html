@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Please Forgive Me 💖</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      background: #000;
+    }
+
+    .background-image {
+      background: url('data:image/webp;base64,UklGRiIAAABXRUJQVlA4ICIAAAAvAAAAHAAAAgAASUNDUMgICCAAA...') no-repeat center center fixed;
+      background-size: cover;
+      filter: blur(8px) brightness(0.6);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, rgba(255, 204, 213, 0.3), rgba(255, 230, 230, 0.3));
+      z-index: -1;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hearts span {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('https://emoji.slack-edge.com/T02ABCDEF/red-heart/9f8f410bce2c718a.gif') no-repeat center/contain;
+      animation: float 10s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(1); opacity: 0.3; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
+
+    .main-wrapper {
+      min-height: 100vh;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      background-color: rgba(255, 240, 245, 0.95);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      color: #ff5e78;
+      margin-bottom: 20px;
+      font-size: 2.5em;
+    }
+
+    .message {
+      font-size: 1.2em;
+      color: #444;
+      text-align: left;
+      min-height: 150px;
+      margin: 0 auto;
+      white-space: pre-line;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: #fff0f5;
+      margin: 10% auto;
+      padding: 40px 30px;
+      border-radius: 25px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(255, 94, 120, 0.4);
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      font-size: 1.8em;
+      color: #ff5e78;
+      margin-bottom: 10px;
+    }
+
+    .modal-content p {
+      font-size: 1.1em;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .modal-content .heart {
+      font-size: 3em;
+      animation: pulse 1s infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .forgive-btn {
+      padding: 12px 30px;
+      background-color: #ff5e78;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 94, 120, 0.5);
+      transition: 0.3s ease;
+    }
+
+    .forgive-btn:hover {
+      background-color: #e94f6e;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-image"></div>
+  <div class="overlay"></div>
+
+  <div class="hearts">
+    <span style="left: 10%; animation-delay: 0s;"></span>
+    <span style="left: 25%; animation-delay: 2s;"></span>
+    <span style="left: 40%; animation-delay: 4s;"></span>
+    <span style="left: 55%; animation-delay: 1s;"></span>
+    <span style="left: 70%; animation-delay: 3s;"></span>
+    <span style="left: 85%; animation-delay: 2.5s;"></span>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="container">
+      <h1>Hey Medam ji ❤️</h1>
+      <div class="message" id="typedMessage"></div>
+    </div>
+  </div>
+
+  <div id="loveModal" class="modal">
+    <div class="modal-content">
+      <div class="heart">❤️</div>
+      <h2>Will You Forgive Me?</h2>
+      <p>I know I made mistakes... But my heart is truly yours.</p>
+      <button class="forgive-btn" onclick="acceptForgiveness()">Yes, I Forgive You 💖</button>
+    </div>
+  </div>
+
+  <script>
+    const message = `I’m truly sorry for not being there when you needed me the most.
+I know my absence must have hurt you, and that’s the last thing I ever wanted.
+
+You mean the world to me, and it breaks my heart knowing I let you down in a moment that mattered.
+
+Please know it wasn’t because I didn’t care—I care more than words can express.
+I should have been your support, your comfort, your safe place.
+
+I can’t go back and change the past, but I promise to be better moving forward—
+to listen more, to be present, and to never let you feel alone again. 
+
+kr bhi do yr maaf nhi lgta mn aapke bina 
+aapka vasu`;
+
+    const typedMessage = document.getElementById("typedMessage");
+    let i = 0;
+
+    function typeWriter() {
+      if (i < message.length) {
+        typedMessage.innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typeWriter, 30);
+      } else {
+        setTimeout(() => {
+          document.getElementById("loveModal").style.display = "block";
+        }, 800);
+      }
+    }
+
+    function acceptForgiveness() {
+      document.getElementById("loveModal").style.display = "none";
+      alert("Thank you Siya ❤️ I’ll make you proud of this love. Forever yours.");
+    }
+
+    typeWriter();
+  </script>
+</body>
+</html>
